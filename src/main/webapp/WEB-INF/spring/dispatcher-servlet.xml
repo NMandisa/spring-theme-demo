@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ~ Copyright (c) 2023. ~ Author : Noxolo.Mkhungo | +27(0)71 741 6469 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <mvc:resources mapping="/resources/**" location="WEB-INF/resources/" cache-period="31556926" />
+    <mvc:resources mapping="/static/**" location="WEB-INF/resources/static/" cache-period="31556926" />
+    <mvc:resources mapping="/themes/js/**" location="WEB-INF/resources/themes/js/" cache-period="31556926" />
+    <mvc:resources mapping="/themes/css/**" location="WEB-INF/resources/themes/css/" cache-period="31556926" />
+
+    <context:component-scan  base-package="za.co.langa" />
+    <context:annotation-config/>
+    <mvc:annotation-driven />
+
+    <bean id="templateResolver" class="org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML" />
+        <property name="cacheable" value="true" />
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring6.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+        <property name="enableSpringELCompiler" value="true" />
+    </bean>
+
+    <bean class="org.thymeleaf.spring6.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <!--<property name="order" value="1" />-->
+        <!--<property name="viewNames" value="/WEB-INF/views/*" />-->
+        <!--<property name="viewNames" value="*.html,*.xhtml" />-->
+    </bean>
+
+    <!-- Message bundle -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <!--<property name="basenames" value="/WEB-INF/messages/**.properties">-->
+        <property name="basenames">
+            <list>
+                <value>/WEB-INF/messages/labels.properties</value>
+                <value>/WEB-INF/messages/validation-error-messages.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- locale -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="en" />
+    </bean>
+
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver" >
+        <property name="mappedHandlerClasses" value="za.co.langa.exception.GlobalExceptionHandler"/>
+    </bean>
+
+    <bean id="handlerMapping"
+          class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="localeChangeInterceptor" />
+            </list>
+        </property>
+    </bean>
+
+</beans>
