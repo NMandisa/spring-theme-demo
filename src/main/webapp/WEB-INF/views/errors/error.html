@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>General Error</title>
+    <title>Error</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
@@ -13,7 +13,7 @@
         <script type="text/javascript" th:src="@{/themes/js/app.min.css}"></script>
 </head>
 <body>
-<h1>General Error</h1>
-<h3  th:text="${errorMessage}"></h3>
+<h1>Error <span th:text="${errorCode}"></span></h1>
+<h3 th:text="${message}"></h3>
 </body>
 </html>
